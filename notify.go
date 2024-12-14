@@ -19,15 +19,6 @@ import (
 // timeOut is  hardcoded GRPC requests timeout value
 const timeOut = 60
 
-type IResumeAPI interface {
-	GetAllAppliedCandidatesByNoty(notyUuid string) ([]*models.Notification, error)
-
-	//HealthCheck() error
-
-	// Close GRPC Api connection
-	Close() error
-}
-
 // Api is profile-service GRPC Api
 // structure with client Connection
 type Api struct {
@@ -39,8 +30,27 @@ type Api struct {
 	grpc_health_v1.HealthClient
 }
 
-// New create new Battles Api instance
-func New(addr string) (IResumeAPI, error) {
+func NewNotificator(kafkaAdd, grpcAddr string, timeout time.Duration) (INotificator, error) {
+	noty := &notificator{
+		address:    kafkaAdd,
+		errHandler: make(chan *string),
+		stop:       make(chan struct{}),
+		timeout:    timeout,
+	}
+
+	noty.registerWriter = noty.NewKafkaWriter("register")
+	noty.updaterWriter = noty.NewKafkaWriter("updater")
+
+	noty.mq = &models.MessageNotification{}
+	api, err := NewApi(grpcAddr)
+	if err != nil {
+		return nil, fmt.Errorf("%w", err)
+	}
+	noty.api = api
+	return noty, nil
+}
+
+func NewApi(addr string) (*Api, error) {
 	api := &Api{timeout: timeOut * time.Second}
 
 	if err := api.initConn(addr); err != nil {
@@ -66,13 +76,13 @@ func (api *Api) initConn(addr string) (err error) {
 	}
 	return
 }
-func (api *Api) GetAllAppliedCandidatesByNoty(notyUuid string) ([]*models.Notification, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), api.timeout)
+func (noty *notificator) GetAllAppliedCandidatesByNoty(notyUuid string) ([]*models.Notification, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), noty.api.timeout)
 	defer cancel()
 
 	var notes *proto.Notifications
 	notyReq := &proto.NotifyReq{NoteUuid: notyUuid}
-	notes, err := api.NotificationServiceClient.GetAllAppliedCandidatesByNoty(ctx, notyReq)
+	notes, err := noty.api.NotificationServiceClient.GetAllAppliedCandidatesByNoty(ctx, notyReq)
 	if err != nil {
 		return nil, fmt.Errorf("GetResumes api request: %w", err)
 	}
