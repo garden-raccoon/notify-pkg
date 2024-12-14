@@ -1,0 +1,15 @@
+syntax = "proto3";
+package service;
+
+option go_package = "protocols/notify";
+
+import "notify-models.proto";
+
+// ResumeService is
+service NotificationService {
+    rpc GetNotifications(NotesDbEmpty) returns(models.Notifications);
+}
+
+
+message NotesDbEmpty {}
+
