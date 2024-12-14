@@ -65,7 +65,7 @@ func NewApi(addr string) (*Api, error) {
 func (noty *notificator) GetEmployerByVac(vacReq string) (string, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), noty.api.timeout)
 	defer cancel()
-	varRequest := &proto.VacancyReq{VacancyUuid: vacReq}
+	varRequest := &proto.VacancyNotyReq{VacancyUuid: vacReq}
 	employerUUID, err := noty.api.NotificationServiceClient.GetEmployerByVac(ctx, varRequest)
 	if err != nil {
 		return "", fmt.Errorf("GetEmployerByVac api request: %w", err)

@@ -8,7 +8,7 @@ import "notify-models.proto";
 // ResumeService is
 service NotificationService {
     rpc GetAllAppliedCandidatesByNoty(NotifyReq) returns(models.Notifications);
-    rpc GetEmployerByVac(VacancyReq) returns(EmployerResp);
+    rpc GetEmployerByVac(VacancyNotyReq) returns(EmployerNotyResp);
 }
 
 
@@ -16,9 +16,9 @@ message NotifyReq {
     string employer_uuid = 1;
 }
 
-message VacancyReq {
+message VacancyNotyReq {
     string vacancy_uuid = 1;
 }
-message EmployerResp{
+message EmployerNotyResp{
     string employer_uuid = 1;
 }
