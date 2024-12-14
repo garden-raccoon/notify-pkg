@@ -2,7 +2,6 @@ package notify
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/health/grpc_health_v1"
@@ -23,7 +22,7 @@ const timeOut = 60
 type IResumeAPI interface {
 	GetAllAppliedCandidatesByNoty(notyUuid string) ([]*models.Notification, error)
 
-	HealthCheck() error
+	//HealthCheck() error
 
 	// Close GRPC Api connection
 	Close() error
@@ -82,20 +81,21 @@ func (api *Api) GetAllAppliedCandidatesByNoty(notyUuid string) ([]*models.Notifi
 
 	return notifications, nil
 }
-func (api *Api) HealthCheck() error {
-	ctx, cancel := context.WithTimeout(context.Background(), api.timeout)
-	defer cancel()
 
-	api.mu.Lock()
-	defer api.mu.Unlock()
-
-	resp, err := api.HealthClient.Check(ctx, &grpc_health_v1.HealthCheckRequest{Service: "resumeapi"})
-	if err != nil {
-		return fmt.Errorf("healthcheck error: %w", err)
-	}
-
-	if resp.Status != grpc_health_v1.HealthCheckResponse_SERVING {
-		return fmt.Errorf("node is %s", errors.New("service is unhealthy"))
-	}
-	return nil
-}
+//func (api *Api) HealthCheck() error {
+//	ctx, cancel := context.WithTimeout(context.Background(), api.timeout)
+//	defer cancel()
+//
+//	api.mu.Lock()
+//	defer api.mu.Unlock()
+//
+//	resp, err := api.HealthClient.Check(ctx, &grpc_health_v1.HealthCheckRequest{Service: "resumeapi"})
+//	if err != nil {
+//		return fmt.Errorf("healthcheck error: %w", err)
+//	}
+//
+//	if resp.Status != grpc_health_v1.HealthCheckResponse_SERVING {
+//		return fmt.Errorf("node is %s", errors.New("service is unhealthy"))
+//	}
+//	return nil
+//}
