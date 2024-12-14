@@ -20,6 +20,7 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	NotificationService_GetAllAppliedCandidatesByNoty_FullMethodName = "/service.NotificationService/GetAllAppliedCandidatesByNoty"
+	NotificationService_GetEmployerByVac_FullMethodName              = "/service.NotificationService/GetEmployerByVac"
 )
 
 // NotificationServiceClient is the client API for NotificationService service.
@@ -29,6 +30,7 @@ const (
 // ResumeService is
 type NotificationServiceClient interface {
 	GetAllAppliedCandidatesByNoty(ctx context.Context, in *NotifyReq, opts ...grpc.CallOption) (*Notifications, error)
+	GetEmployerByVac(ctx context.Context, in *VacancyReq, opts ...grpc.CallOption) (*EmployerResp, error)
 }
 
 type notificationServiceClient struct {
@@ -49,6 +51,16 @@ func (c *notificationServiceClient) GetAllAppliedCandidatesByNoty(ctx context.Co
 	return out, nil
 }
 
+func (c *notificationServiceClient) GetEmployerByVac(ctx context.Context, in *VacancyReq, opts ...grpc.CallOption) (*EmployerResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(EmployerResp)
+	err := c.cc.Invoke(ctx, NotificationService_GetEmployerByVac_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // NotificationServiceServer is the server API for NotificationService service.
 // All implementations must embed UnimplementedNotificationServiceServer
 // for forward compatibility.
@@ -56,6 +68,7 @@ func (c *notificationServiceClient) GetAllAppliedCandidatesByNoty(ctx context.Co
 // ResumeService is
 type NotificationServiceServer interface {
 	GetAllAppliedCandidatesByNoty(context.Context, *NotifyReq) (*Notifications, error)
+	GetEmployerByVac(context.Context, *VacancyReq) (*EmployerResp, error)
 	mustEmbedUnimplementedNotificationServiceServer()
 }
 
@@ -68,6 +81,9 @@ type UnimplementedNotificationServiceServer struct{}
 
 func (UnimplementedNotificationServiceServer) GetAllAppliedCandidatesByNoty(context.Context, *NotifyReq) (*Notifications, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAllAppliedCandidatesByNoty not implemented")
+}
+func (UnimplementedNotificationServiceServer) GetEmployerByVac(context.Context, *VacancyReq) (*EmployerResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetEmployerByVac not implemented")
 }
 func (UnimplementedNotificationServiceServer) mustEmbedUnimplementedNotificationServiceServer() {}
 func (UnimplementedNotificationServiceServer) testEmbeddedByValue()                             {}
@@ -108,6 +124,24 @@ func _NotificationService_GetAllAppliedCandidatesByNoty_Handler(srv interface{},
 	return interceptor(ctx, in, info, handler)
 }
 
+func _NotificationService_GetEmployerByVac_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(VacancyReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(NotificationServiceServer).GetEmployerByVac(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: NotificationService_GetEmployerByVac_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(NotificationServiceServer).GetEmployerByVac(ctx, req.(*VacancyReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // NotificationService_ServiceDesc is the grpc.ServiceDesc for NotificationService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -118,6 +152,10 @@ var NotificationService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetAllAppliedCandidatesByNoty",
 			Handler:    _NotificationService_GetAllAppliedCandidatesByNoty_Handler,
+		},
+		{
+			MethodName: "GetEmployerByVac",
+			Handler:    _NotificationService_GetEmployerByVac_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
