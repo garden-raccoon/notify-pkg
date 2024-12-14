@@ -5,9 +5,9 @@ import (
 )
 
 type Notification struct {
-	NoteUUID      string
 	UserUUID      string
 	VacancyUUID   string
+	NoteUUID      string
 	CandidateName string
 	CandidateUrl  string
 	IsReaded      bool
@@ -16,7 +16,6 @@ type Notification struct {
 func (n Notification) Proto() *proto.Notification {
 
 	pb := &proto.Notification{
-		NoteUuid:      n.NoteUUID,
 		CandidateName: n.CandidateName,
 		CanditateUrl:  n.CandidateUrl,
 		UserUuid:      n.UserUUID,
@@ -26,21 +25,21 @@ func (n Notification) Proto() *proto.Notification {
 	return pb
 }
 
-func NotesFronProto(pb *proto.Notifications) []*Notification {
+func AppliedNotesFronProto(pb *proto.Notifications, noteUuid string) []*Notification {
 	var notes []*Notification
 
 	for i := range pb.Notifications {
-		notes = append(notes, FromProto(pb.Notifications[i]))
+		notes = append(notes, AppliedFromProto(pb.Notifications[i], noteUuid))
 	}
 	return notes
 }
-func FromProto(pb *proto.Notification) *Notification {
+func AppliedFromProto(pb *proto.Notification, noteUuid string) *Notification {
 	return &Notification{
-		NoteUUID:      pb.NoteUuid,
 		UserUUID:      pb.UserUuid,
 		VacancyUUID:   pb.VacancyUuid,
 		CandidateName: pb.CandidateName,
 		CandidateUrl:  pb.CanditateUrl,
 		IsReaded:      pb.IsReaded,
+		NoteUUID:      noteUuid,
 	}
 }

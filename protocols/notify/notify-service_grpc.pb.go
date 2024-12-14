@@ -19,7 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	NotificationService_GetNotifications_FullMethodName = "/service.NotificationService/GetNotifications"
+	NotificationService_GetAllAppliedCandidatesByNoty_FullMethodName = "/service.NotificationService/GetAllAppliedCandidatesByNoty"
 )
 
 // NotificationServiceClient is the client API for NotificationService service.
@@ -28,7 +28,7 @@ const (
 //
 // ResumeService is
 type NotificationServiceClient interface {
-	GetNotifications(ctx context.Context, in *NotesDbEmpty, opts ...grpc.CallOption) (*Notifications, error)
+	GetAllAppliedCandidatesByNoty(ctx context.Context, in *NotifyReq, opts ...grpc.CallOption) (*Notifications, error)
 }
 
 type notificationServiceClient struct {
@@ -39,10 +39,10 @@ func NewNotificationServiceClient(cc grpc.ClientConnInterface) NotificationServi
 	return &notificationServiceClient{cc}
 }
 
-func (c *notificationServiceClient) GetNotifications(ctx context.Context, in *NotesDbEmpty, opts ...grpc.CallOption) (*Notifications, error) {
+func (c *notificationServiceClient) GetAllAppliedCandidatesByNoty(ctx context.Context, in *NotifyReq, opts ...grpc.CallOption) (*Notifications, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(Notifications)
-	err := c.cc.Invoke(ctx, NotificationService_GetNotifications_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, NotificationService_GetAllAppliedCandidatesByNoty_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -55,7 +55,7 @@ func (c *notificationServiceClient) GetNotifications(ctx context.Context, in *No
 //
 // ResumeService is
 type NotificationServiceServer interface {
-	GetNotifications(context.Context, *NotesDbEmpty) (*Notifications, error)
+	GetAllAppliedCandidatesByNoty(context.Context, *NotifyReq) (*Notifications, error)
 	mustEmbedUnimplementedNotificationServiceServer()
 }
 
@@ -66,8 +66,8 @@ type NotificationServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedNotificationServiceServer struct{}
 
-func (UnimplementedNotificationServiceServer) GetNotifications(context.Context, *NotesDbEmpty) (*Notifications, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetNotifications not implemented")
+func (UnimplementedNotificationServiceServer) GetAllAppliedCandidatesByNoty(context.Context, *NotifyReq) (*Notifications, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAllAppliedCandidatesByNoty not implemented")
 }
 func (UnimplementedNotificationServiceServer) mustEmbedUnimplementedNotificationServiceServer() {}
 func (UnimplementedNotificationServiceServer) testEmbeddedByValue()                             {}
@@ -90,20 +90,20 @@ func RegisterNotificationServiceServer(s grpc.ServiceRegistrar, srv Notification
 	s.RegisterService(&NotificationService_ServiceDesc, srv)
 }
 
-func _NotificationService_GetNotifications_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(NotesDbEmpty)
+func _NotificationService_GetAllAppliedCandidatesByNoty_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(NotifyReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(NotificationServiceServer).GetNotifications(ctx, in)
+		return srv.(NotificationServiceServer).GetAllAppliedCandidatesByNoty(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: NotificationService_GetNotifications_FullMethodName,
+		FullMethod: NotificationService_GetAllAppliedCandidatesByNoty_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(NotificationServiceServer).GetNotifications(ctx, req.(*NotesDbEmpty))
+		return srv.(NotificationServiceServer).GetAllAppliedCandidatesByNoty(ctx, req.(*NotifyReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -116,8 +116,8 @@ var NotificationService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*NotificationServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetNotifications",
-			Handler:    _NotificationService_GetNotifications_Handler,
+			MethodName: "GetAllAppliedCandidatesByNoty",
+			Handler:    _NotificationService_GetAllAppliedCandidatesByNoty_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

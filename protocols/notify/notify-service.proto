@@ -7,9 +7,10 @@ import "notify-models.proto";
 
 // ResumeService is
 service NotificationService {
-    rpc GetNotifications(NotesDbEmpty) returns(models.Notifications);
+    rpc GetAllAppliedCandidatesByNoty(NotifyReq) returns(models.Notifications);
 }
 
 
-message NotesDbEmpty {}
-
+message NotifyReq {
+    string note_uuid = 1;
+}

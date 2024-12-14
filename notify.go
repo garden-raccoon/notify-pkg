@@ -21,7 +21,7 @@ import (
 const timeOut = 60
 
 type IResumeAPI interface {
-	GetNotifications() ([]*models.Notification, error)
+	GetAllAppliedCandidatesByNoty(notyUuid string) ([]*models.Notification, error)
 
 	HealthCheck() error
 
@@ -67,18 +67,18 @@ func (api *Api) initConn(addr string) (err error) {
 	}
 	return
 }
-func (api *Api) GetNotifications() ([]*models.Notification, error) {
+func (api *Api) GetAllAppliedCandidatesByNoty(notyUuid string) ([]*models.Notification, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), api.timeout)
 	defer cancel()
 
 	var notes *proto.Notifications
-	empty := new(proto.NotesDbEmpty)
-	notes, err := api.NotificationServiceClient.GetNotifications(ctx, empty)
+	notyReq := &proto.NotifyReq{NoteUuid: notyUuid}
+	notes, err := api.NotificationServiceClient.GetAllAppliedCandidatesByNoty(ctx, notyReq)
 	if err != nil {
 		return nil, fmt.Errorf("GetResumes api request: %w", err)
 	}
 
-	notifications := models.NotesFronProto(notes)
+	notifications := models.AppliedNotesFronProto(notes, notyUuid)
 
 	return notifications, nil
 }
