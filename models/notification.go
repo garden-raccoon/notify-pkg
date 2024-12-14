@@ -8,8 +8,9 @@ import (
 )
 
 type Notification struct {
-	UserUUID      string
+	EmployeeUUID  string
 	VacancyUUID   string
+	EmployerUUID  string
 	NoteUUID      string
 	CandidateName string
 	CandidateUrl  string
@@ -19,9 +20,11 @@ type Notification struct {
 func (n Notification) Proto() *proto.Notification {
 
 	pb := &proto.Notification{
+		NoteUuid:      n.NoteUUID,
+		EmployerUuid:  n.EmployerUUID,
 		CandidateName: n.CandidateName,
 		CanditateUrl:  n.CandidateUrl,
-		UserUuid:      n.UserUUID,
+		EmployeeUuid:  n.EmployeeUUID,
 		VacancyUuid:   n.VacancyUUID,
 		IsReaded:      n.IsReaded,
 	}
@@ -38,8 +41,9 @@ func AppliedNotesFronProto(pb *proto.Notifications, noteUuid string) []*Notifica
 }
 func AppliedFromProto(pb *proto.Notification, noteUuid string) *Notification {
 	return &Notification{
-		UserUUID:      pb.UserUuid,
+		EmployeeUUID:  pb.EmployeeUuid,
 		VacancyUUID:   pb.VacancyUuid,
+		EmployerUUID:  pb.EmployerUuid,
 		CandidateName: pb.CandidateName,
 		CandidateUrl:  pb.CanditateUrl,
 		IsReaded:      pb.IsReaded,

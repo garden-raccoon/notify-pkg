@@ -7,9 +7,10 @@ message Notification {
    string     note_uuid  = 1;
    string     candidate_name  = 2;
    string     canditate_url  = 3;
-   string     user_uuid  = 4;
+   string     employee_uuid  = 4;
    string     vacancy_uuid  = 5;
-   bool     is_readed  = 6;
+   string     employer_uuid =6;
+   bool     is_readed  = 7;
 }
 
 message Notifications {

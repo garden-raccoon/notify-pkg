@@ -76,18 +76,18 @@ func (api *Api) initConn(addr string) (err error) {
 	}
 	return
 }
-func (noty *notificator) GetAllAppliedCandidatesByNoty(notyUuid string) ([]*models.Notification, error) {
+func (noty *notificator) GetAllAppliedCandidatesByNoty(employerUUID string) ([]*models.Notification, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), noty.api.timeout)
 	defer cancel()
 
 	var notes *proto.Notifications
-	notyReq := &proto.NotifyReq{NoteUuid: notyUuid}
+	notyReq := &proto.NotifyReq{EmployerUuid: employerUUID}
 	notes, err := noty.api.NotificationServiceClient.GetAllAppliedCandidatesByNoty(ctx, notyReq)
 	if err != nil {
 		return nil, fmt.Errorf("GetResumes api request: %w", err)
 	}
 
-	notifications := models.AppliedNotesFronProto(notes, notyUuid)
+	notifications := models.AppliedNotesFronProto(notes, employerUUID)
 
 	return notifications, nil
 }
