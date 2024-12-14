@@ -1,4 +1,4 @@
-package resume
+package notify
 
 import (
 	"context"
@@ -21,7 +21,7 @@ import (
 const timeOut = 60
 
 type IResumeAPI interface {
-	GetResumes() ([]*models.Notification, error)
+	GetNotifications() ([]*models.Notification, error)
 
 	HealthCheck() error
 
@@ -67,7 +67,7 @@ func (api *Api) initConn(addr string) (err error) {
 	}
 	return
 }
-func (api *Api) GetResumes() ([]*models.Notification, error) {
+func (api *Api) GetNotifications() ([]*models.Notification, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), api.timeout)
 	defer cancel()
 
