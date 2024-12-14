@@ -14,7 +14,8 @@ import (
 
 type INotificator interface {
 	GetAllAppliedCandidatesByNoty(notyUuid string) ([]*models.Notification, error)
-	//HealthCheck() error
+
+	GetEmployerByVac(vacReq string) (string, error)
 
 	NewRegisterNotification(req *models.MessageNotification)
 	NewUpdateNotification(req *models.MessageNotification)
