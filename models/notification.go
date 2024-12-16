@@ -63,19 +63,17 @@ type MessageNotification struct {
 	Mu sync.Mutex
 }
 
-func NewMessageNotification(candidateName, candidateUrl, employeeUUID, vacancyUUID string) (*MessageNotification, error) {
+func NewMessageNotification(candidateName, candidateUrl, employeeUUID, employerUUID, vacancyUUID string) (*MessageNotification, error) {
 	newUUID, err := gocql.RandomUUID()
 	if err != nil {
 		return nil, fmt.Errorf("%w", err)
 	}
 
-	// Please, notice that Employer UUID isn't presented here
-	// It's because we would have to do some additional steps
-	// to receive employerUUID
-	//
-	// Also it would be updated in the `update` event
-
 	employee, err := gocql.ParseUUID(employeeUUID)
+	if err != nil {
+		return nil, fmt.Errorf("%w", err)
+	}
+	employer, err := gocql.ParseUUID(employerUUID)
 	if err != nil {
 		return nil, fmt.Errorf("%w", err)
 	}
@@ -86,6 +84,7 @@ func NewMessageNotification(candidateName, candidateUrl, employeeUUID, vacancyUU
 	return &MessageNotification{
 		NoteUUID:      newUUID,
 		EmployeeUUID:  employee,
+		EmployerUUID:  employer,
 		VacancyUUID:   vacUuid,
 		CandidateName: candidateName,
 		CandidateUrl:  candidateUrl,
