@@ -11,9 +11,8 @@ service NotificationService {
     rpc GetEmployerByVac(VacancyNotyReq) returns(EmployerNotyResp);
 }
 
-
 message NotifyReq {
-    string vacancy_uuid = 1;
+    string employer_uuid = 1;
 }
 
 message VacancyNotyReq {
