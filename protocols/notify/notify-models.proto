@@ -10,7 +10,7 @@ message Notification {
    string     employee_uuid  = 4;
    string     vacancy_uuid  = 5;
    string     employer_uuid =6;
-   bool     is_readed  = 7;
+   bool       is_readed  = 7;
 }
 
 message Notifications {

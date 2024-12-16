@@ -53,7 +53,8 @@ func AppliedFromProto(pb *proto.Notification, noteUuid string) *Notification {
 
 type MessageNotification struct {
 	NoteUUID      gocql.UUID
-	UserUUID      gocql.UUID
+	EmployeeUUID  gocql.UUID
+	EmployerUUID  gocql.UUID // is recieved while update !
 	VacancyUUID   gocql.UUID
 	CandidateName string
 	CandidateUrl  string
@@ -62,12 +63,19 @@ type MessageNotification struct {
 	Mu sync.Mutex
 }
 
-func NewMessageNotification(candidateName, candidateUrl, userUUID, vacancyUUID string) (*MessageNotification, error) {
+func NewMessageNotification(candidateName, candidateUrl, employeeUUID, vacancyUUID string) (*MessageNotification, error) {
 	newUUID, err := gocql.RandomUUID()
 	if err != nil {
 		return nil, fmt.Errorf("%w", err)
 	}
-	userUuid, err := gocql.ParseUUID(userUUID)
+
+	// Please, notice that Employer UUID isn't presented here
+	// It's because we would have to do some additional steps
+	// to receive employerUUID
+	//
+	// Also it would be updated in the `update` event
+
+	employee, err := gocql.ParseUUID(employeeUUID)
 	if err != nil {
 		return nil, fmt.Errorf("%w", err)
 	}
@@ -77,7 +85,7 @@ func NewMessageNotification(candidateName, candidateUrl, userUUID, vacancyUUID s
 	}
 	return &MessageNotification{
 		NoteUUID:      newUUID,
-		UserUUID:      userUuid,
+		EmployeeUUID:  employee,
 		VacancyUUID:   vacUuid,
 		CandidateName: candidateName,
 		CandidateUrl:  candidateUrl,
