@@ -31,11 +31,11 @@ func (n Notification) Proto() *proto.Notification {
 	return pb
 }
 
-func AppliedNotesFronProto(pb *proto.Notifications, noteUuid string) []*Notification {
+func AppliedNotesFromProto(pb *proto.Notifications, vacUuid string) []*Notification {
 	var notes []*Notification
 
 	for i := range pb.Notifications {
-		notes = append(notes, AppliedFromProto(pb.Notifications[i], noteUuid))
+		notes = append(notes, AppliedFromProto(pb.Notifications[i], vacUuid))
 	}
 	return notes
 }

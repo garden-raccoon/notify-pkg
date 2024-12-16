@@ -13,7 +13,7 @@ service NotificationService {
 
 
 message NotifyReq {
-    string employer_uuid = 1;
+    string vacancy_uuid = 1;
 }
 
 message VacancyNotyReq {
