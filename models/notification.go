@@ -12,6 +12,7 @@ type Notification struct {
 	VacancyUUID   string
 	EmployerUUID  string
 	NoteUUID      string
+	ResumeUUID    string
 	CandidateName string
 	CandidateUrl  string
 	IsReaded      bool
@@ -26,6 +27,7 @@ func (n Notification) Proto() *proto.Notification {
 		CanditateUrl:  n.CandidateUrl,
 		EmployeeUuid:  n.EmployeeUUID,
 		VacancyUuid:   n.VacancyUUID,
+		ResumeUuid:    n.ResumeUUID,
 		IsReaded:      n.IsReaded,
 	}
 	return pb
@@ -46,6 +48,7 @@ func AppliedFromProto(pb *proto.Notification, noteUuid string) *Notification {
 		EmployerUUID:  pb.EmployerUuid,
 		CandidateName: pb.CandidateName,
 		CandidateUrl:  pb.CanditateUrl,
+		ResumeUUID:    pb.ResumeUuid,
 		IsReaded:      pb.IsReaded,
 		NoteUUID:      noteUuid,
 	}
@@ -54,8 +57,9 @@ func AppliedFromProto(pb *proto.Notification, noteUuid string) *Notification {
 type MessageNotification struct {
 	NoteUUID      gocql.UUID
 	EmployeeUUID  gocql.UUID
-	EmployerUUID  gocql.UUID // is recieved while update !
+	EmployerUUID  gocql.UUID
 	VacancyUUID   gocql.UUID
+	ResumeUUID    gocql.UUID
 	CandidateName string
 	CandidateUrl  string
 	IsReaded      bool
@@ -63,7 +67,7 @@ type MessageNotification struct {
 	Mu sync.Mutex
 }
 
-func NewMessageNotification(candidateName, candidateUrl, employeeUUID, employerUUID, vacancyUUID string) (*MessageNotification, error) {
+func NewMessageNotification(candidateName, candidateUrl, employeeUUID, employerUUID, vacancyUUID, resumeUUID string) (*MessageNotification, error) {
 	newUUID, err := gocql.RandomUUID()
 	if err != nil {
 		return nil, fmt.Errorf("%w", err)
@@ -81,6 +85,10 @@ func NewMessageNotification(candidateName, candidateUrl, employeeUUID, employerU
 	if err != nil {
 		return nil, fmt.Errorf("%w", err)
 	}
+	resume, err := gocql.ParseUUID(resumeUUID)
+	if err != nil {
+		return nil, fmt.Errorf("%w", err)
+	}
 	return &MessageNotification{
 		NoteUUID:      newUUID,
 		EmployeeUUID:  employee,
@@ -88,6 +96,7 @@ func NewMessageNotification(candidateName, candidateUrl, employeeUUID, employerU
 		VacancyUUID:   vacUuid,
 		CandidateName: candidateName,
 		CandidateUrl:  candidateUrl,
+		ResumeUUID:    resume,
 		IsReaded:      false,
 	}, nil
 }
