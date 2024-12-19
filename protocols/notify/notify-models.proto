@@ -11,7 +11,7 @@ message Notification {
    string     vacancy_uuid  = 5;
    string     employer_uuid =6;
    string     resume_uuid=7;
-   bool       is_readed  = 8;
+   bool       is_read  = 8;
 }
 
 message Notifications {

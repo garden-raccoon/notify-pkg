@@ -103,6 +103,18 @@ func (noty *notificator) GetAllAppliedCandidatesByNoty(employerUuid string) ([]*
 
 	return notifications, nil
 }
+func (noty *notificator) UpdateReadNotification(noteUuid string) (error, bool) {
+	ctx, cancel := context.WithTimeout(context.Background(), noty.api.timeout)
+	defer cancel()
+
+	notyReq := &proto.NoteReq{NoteUuid: noteUuid}
+	notyResp, err := noty.api.NotificationServiceClient.UpdateReadNotification(ctx, notyReq)
+	if err != nil {
+		return fmt.Errorf("GetResumes api request: %w", err), false
+	}
+
+	return nil, notyResp.IsRead
+}
 
 //func (api *Api) HealthCheck() error {
 //	ctx, cancel := context.WithTimeout(context.Background(), api.timeout)

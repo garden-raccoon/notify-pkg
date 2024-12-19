@@ -16,10 +16,9 @@ type INotificator interface {
 	GetAllAppliedCandidatesByNoty(notyUuid string) ([]*models.Notification, error)
 
 	GetEmployerByVac(vacReq string) (string, error)
-
+	UpdateReadNotification(noteUuid string) (error, bool)
 	NewRegisterNotification(req *models.MessageNotification)
 	NewUpdateNotification(req *models.MessageNotification)
-
 	Stop()
 	// Close GRPC Api connection
 }

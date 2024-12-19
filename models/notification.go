@@ -15,7 +15,7 @@ type Notification struct {
 	ResumeUUID    string
 	CandidateName string
 	CandidateUrl  string
-	IsReaded      bool
+	IsRead        bool
 }
 
 func (n Notification) Proto() *proto.Notification {
@@ -28,7 +28,7 @@ func (n Notification) Proto() *proto.Notification {
 		EmployeeUuid:  n.EmployeeUUID,
 		VacancyUuid:   n.VacancyUUID,
 		ResumeUuid:    n.ResumeUUID,
-		IsReaded:      n.IsReaded,
+		IsRead:        n.IsRead,
 	}
 	return pb
 }
@@ -49,7 +49,7 @@ func AppliedFromProto(pb *proto.Notification, noteUuid string) *Notification {
 		CandidateName: pb.CandidateName,
 		CandidateUrl:  pb.CanditateUrl,
 		ResumeUUID:    pb.ResumeUuid,
-		IsReaded:      pb.IsReaded,
+		IsRead:        pb.IsRead,
 		NoteUUID:      noteUuid,
 	}
 }
@@ -62,7 +62,7 @@ type MessageNotification struct {
 	ResumeUUID    gocql.UUID
 	CandidateName string
 	CandidateUrl  string
-	IsReaded      bool
+	IsRead        bool
 
 	Mu sync.Mutex
 }
@@ -97,7 +97,7 @@ func NewMessageNotification(candidateName, candidateUrl, employeeUUID, employerU
 		CandidateName: candidateName,
 		CandidateUrl:  candidateUrl,
 		ResumeUUID:    resume,
-		IsReaded:      false,
+		IsRead:        false,
 	}, nil
 }
 
@@ -108,6 +108,6 @@ func UpdateReadNoty(noteUUID string) (*MessageNotification, error) {
 	}
 	return &MessageNotification{
 		NoteUUID: noteUuid,
-		IsReaded: true,
+		IsRead:   true,
 	}, nil
 }
