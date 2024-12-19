@@ -32,7 +32,7 @@ const (
 // ResumeService is
 type NotificationServiceClient interface {
 	GetAllAppliedCandidatesByNoty(ctx context.Context, in *NotifyReq, opts ...grpc.CallOption) (*Notifications, error)
-	GetAllUnreadCount(ctx context.Context, in *NotyEmpty, opts ...grpc.CallOption) (*Notifications, error)
+	GetAllUnreadCount(ctx context.Context, in *NotifyReq, opts ...grpc.CallOption) (*Notifications, error)
 	UpdateReadNotification(ctx context.Context, in *NoteReq, opts ...grpc.CallOption) (*NoteResp, error)
 	GetEmployerByVac(ctx context.Context, in *VacancyNotyReq, opts ...grpc.CallOption) (*EmployerNotyResp, error)
 }
@@ -55,7 +55,7 @@ func (c *notificationServiceClient) GetAllAppliedCandidatesByNoty(ctx context.Co
 	return out, nil
 }
 
-func (c *notificationServiceClient) GetAllUnreadCount(ctx context.Context, in *NotyEmpty, opts ...grpc.CallOption) (*Notifications, error) {
+func (c *notificationServiceClient) GetAllUnreadCount(ctx context.Context, in *NotifyReq, opts ...grpc.CallOption) (*Notifications, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(Notifications)
 	err := c.cc.Invoke(ctx, NotificationService_GetAllUnreadCount_FullMethodName, in, out, cOpts...)
@@ -92,7 +92,7 @@ func (c *notificationServiceClient) GetEmployerByVac(ctx context.Context, in *Va
 // ResumeService is
 type NotificationServiceServer interface {
 	GetAllAppliedCandidatesByNoty(context.Context, *NotifyReq) (*Notifications, error)
-	GetAllUnreadCount(context.Context, *NotyEmpty) (*Notifications, error)
+	GetAllUnreadCount(context.Context, *NotifyReq) (*Notifications, error)
 	UpdateReadNotification(context.Context, *NoteReq) (*NoteResp, error)
 	GetEmployerByVac(context.Context, *VacancyNotyReq) (*EmployerNotyResp, error)
 	mustEmbedUnimplementedNotificationServiceServer()
@@ -108,7 +108,7 @@ type UnimplementedNotificationServiceServer struct{}
 func (UnimplementedNotificationServiceServer) GetAllAppliedCandidatesByNoty(context.Context, *NotifyReq) (*Notifications, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAllAppliedCandidatesByNoty not implemented")
 }
-func (UnimplementedNotificationServiceServer) GetAllUnreadCount(context.Context, *NotyEmpty) (*Notifications, error) {
+func (UnimplementedNotificationServiceServer) GetAllUnreadCount(context.Context, *NotifyReq) (*Notifications, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAllUnreadCount not implemented")
 }
 func (UnimplementedNotificationServiceServer) UpdateReadNotification(context.Context, *NoteReq) (*NoteResp, error) {
@@ -157,7 +157,7 @@ func _NotificationService_GetAllAppliedCandidatesByNoty_Handler(srv interface{},
 }
 
 func _NotificationService_GetAllUnreadCount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(NotyEmpty)
+	in := new(NotifyReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -169,7 +169,7 @@ func _NotificationService_GetAllUnreadCount_Handler(srv interface{}, ctx context
 		FullMethod: NotificationService_GetAllUnreadCount_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(NotificationServiceServer).GetAllUnreadCount(ctx, req.(*NotyEmpty))
+		return srv.(NotificationServiceServer).GetAllUnreadCount(ctx, req.(*NotifyReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
