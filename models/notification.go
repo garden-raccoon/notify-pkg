@@ -43,6 +43,7 @@ func AppliedNotesFromProto(pb *proto.Notifications, employerUuid string) []*Noti
 }
 func AppliedFromProto(pb *proto.Notification, noteUuid string) *Notification {
 	return &Notification{
+		NoteUUID:      noteUuid,
 		EmployeeUUID:  pb.EmployeeUuid,
 		VacancyUUID:   pb.VacancyUuid,
 		EmployerUUID:  pb.EmployerUuid,
@@ -50,7 +51,6 @@ func AppliedFromProto(pb *proto.Notification, noteUuid string) *Notification {
 		CandidateUrl:  pb.CanditateUrl,
 		ResumeUUID:    pb.ResumeUuid,
 		IsRead:        pb.IsRead,
-		NoteUUID:      noteUuid,
 	}
 }
 
