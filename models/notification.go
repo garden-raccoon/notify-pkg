@@ -91,8 +91,14 @@ func NewMessageNotification(candidateName, candidateUrl, employeeUUID, employerU
 		IsReaded:      false,
 	}, nil
 }
-func UpdateReadNoty() *MessageNotification {
-	return &MessageNotification{
-		IsReaded: true,
+
+func UpdateReadNoty(noteUUID string) (*MessageNotification, error) {
+	noteUuid, err := gocql.ParseUUID(noteUUID)
+	if err != nil {
+		return nil, fmt.Errorf("%w", err)
 	}
+	return &MessageNotification{
+		NoteUUID: noteUuid,
+		IsReaded: true,
+	}, nil
 }
