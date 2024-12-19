@@ -8,13 +8,18 @@ import "notify-models.proto";
 // ResumeService is
 service NotificationService {
     rpc GetAllAppliedCandidatesByNoty(NotifyReq) returns(models.Notifications);
+    rpc GetAllUnreadCount(NotyEmpty) returns(models.Notifications);
     rpc UpdateReadNotification(NoteReq) returns(NoteResp);
     rpc GetEmployerByVac(VacancyNotyReq) returns(EmployerNotyResp);
 }
 
+
 message NotyEmpty{}
 message NoteReq{
     string note_uuid = 1;
+}
+message NoteCount{
+    int64 count = 1;
 }
 message NoteResp{
     bool is_read = 1;

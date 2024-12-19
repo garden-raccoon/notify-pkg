@@ -19,6 +19,7 @@ type INotificator interface {
 	UpdateReadNotification(noteUuid string) (error, bool)
 	NewRegisterNotification(req *models.MessageNotification)
 	NewUpdateNotification(req *models.MessageNotification)
+	GetAllUnreadCount() ([]*models.Notification, error)
 	Stop()
 	// Close GRPC Api connection
 }

@@ -88,6 +88,21 @@ func (api *Api) initConn(addr string) (err error) {
 	}
 	return
 }
+func (noty *notificator) GetAllUnreadCount() ([]*models.Notification, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), noty.api.timeout)
+	defer cancel()
+
+	var notes *proto.Notifications
+	empty := &proto.NotyEmpty{}
+	notes, err := noty.api.NotificationServiceClient.GetAllUnreadCount(ctx, empty)
+	if err != nil {
+		return nil, fmt.Errorf("GetResumes api request: %w", err)
+	}
+
+	notifications := models.NotesFromProto(notes)
+
+	return notifications, nil
+}
 func (noty *notificator) GetAllAppliedCandidatesByNoty(employerUuid string) ([]*models.Notification, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), noty.api.timeout)
 	defer cancel()

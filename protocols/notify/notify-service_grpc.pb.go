@@ -20,6 +20,7 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	NotificationService_GetAllAppliedCandidatesByNoty_FullMethodName = "/service.NotificationService/GetAllAppliedCandidatesByNoty"
+	NotificationService_GetAllUnreadCount_FullMethodName             = "/service.NotificationService/GetAllUnreadCount"
 	NotificationService_UpdateReadNotification_FullMethodName        = "/service.NotificationService/UpdateReadNotification"
 	NotificationService_GetEmployerByVac_FullMethodName              = "/service.NotificationService/GetEmployerByVac"
 )
@@ -31,6 +32,7 @@ const (
 // ResumeService is
 type NotificationServiceClient interface {
 	GetAllAppliedCandidatesByNoty(ctx context.Context, in *NotifyReq, opts ...grpc.CallOption) (*Notifications, error)
+	GetAllUnreadCount(ctx context.Context, in *NotyEmpty, opts ...grpc.CallOption) (*Notifications, error)
 	UpdateReadNotification(ctx context.Context, in *NoteReq, opts ...grpc.CallOption) (*NoteResp, error)
 	GetEmployerByVac(ctx context.Context, in *VacancyNotyReq, opts ...grpc.CallOption) (*EmployerNotyResp, error)
 }
@@ -47,6 +49,16 @@ func (c *notificationServiceClient) GetAllAppliedCandidatesByNoty(ctx context.Co
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(Notifications)
 	err := c.cc.Invoke(ctx, NotificationService_GetAllAppliedCandidatesByNoty_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *notificationServiceClient) GetAllUnreadCount(ctx context.Context, in *NotyEmpty, opts ...grpc.CallOption) (*Notifications, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Notifications)
+	err := c.cc.Invoke(ctx, NotificationService_GetAllUnreadCount_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -80,6 +92,7 @@ func (c *notificationServiceClient) GetEmployerByVac(ctx context.Context, in *Va
 // ResumeService is
 type NotificationServiceServer interface {
 	GetAllAppliedCandidatesByNoty(context.Context, *NotifyReq) (*Notifications, error)
+	GetAllUnreadCount(context.Context, *NotyEmpty) (*Notifications, error)
 	UpdateReadNotification(context.Context, *NoteReq) (*NoteResp, error)
 	GetEmployerByVac(context.Context, *VacancyNotyReq) (*EmployerNotyResp, error)
 	mustEmbedUnimplementedNotificationServiceServer()
@@ -94,6 +107,9 @@ type UnimplementedNotificationServiceServer struct{}
 
 func (UnimplementedNotificationServiceServer) GetAllAppliedCandidatesByNoty(context.Context, *NotifyReq) (*Notifications, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAllAppliedCandidatesByNoty not implemented")
+}
+func (UnimplementedNotificationServiceServer) GetAllUnreadCount(context.Context, *NotyEmpty) (*Notifications, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAllUnreadCount not implemented")
 }
 func (UnimplementedNotificationServiceServer) UpdateReadNotification(context.Context, *NoteReq) (*NoteResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateReadNotification not implemented")
@@ -136,6 +152,24 @@ func _NotificationService_GetAllAppliedCandidatesByNoty_Handler(srv interface{},
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(NotificationServiceServer).GetAllAppliedCandidatesByNoty(ctx, req.(*NotifyReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _NotificationService_GetAllUnreadCount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(NotyEmpty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(NotificationServiceServer).GetAllUnreadCount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: NotificationService_GetAllUnreadCount_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(NotificationServiceServer).GetAllUnreadCount(ctx, req.(*NotyEmpty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -186,6 +220,10 @@ var NotificationService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetAllAppliedCandidatesByNoty",
 			Handler:    _NotificationService_GetAllAppliedCandidatesByNoty_Handler,
+		},
+		{
+			MethodName: "GetAllUnreadCount",
+			Handler:    _NotificationService_GetAllUnreadCount_Handler,
 		},
 		{
 			MethodName: "UpdateReadNotification",
