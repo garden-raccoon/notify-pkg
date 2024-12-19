@@ -91,3 +91,8 @@ func NewMessageNotification(candidateName, candidateUrl, employeeUUID, employerU
 		IsReaded:      false,
 	}, nil
 }
+func UpdateReadNoty() *MessageNotification {
+	return &MessageNotification{
+		IsReaded: true,
+	}
+}
